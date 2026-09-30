@@ -1,5 +1,6 @@
 const express = require("express");
 const http = require("http");
+const Message = require("./models/message");
 const { Server } = require("socket.io");
 const connectDatabase = require("./config/database");
 require("dotenv").config();
@@ -39,20 +40,33 @@ io.on("connection", (socket) => {
         );
     });
 
-    socket.on("message:send", ({ meetingId, message }) => {
+    socket.on("message:send", async ({ meetingId, message }) => {
         if (!meetingId || !message) {
             return;
         }
 
-        console.log(
-            `Message from ${userId} in meeting ${meetingId}: ${message}`
-        );
+        try {
+            const newMessage = await Message.create({
+                meetingId,
+                userId,
+                message,
+            });
 
-        io.to(`meeting:${meetingId}`).emit("message:new", {
-            userId,
-            message,
-        });
-    });
+            console.log(
+                `Message from ${userId} in meeting ${meetingId}: ${message}`
+            );
+
+            io.to(`meeting:${meetingId}`).emit("message:new", {
+                id: newMessage._id,
+                meetingId: newMessage.meetingId,
+                userId: newMessage.userId,
+                message: newMessage.message,
+                createdAt: newMessage.createdAt,
+            });
+        } catch (error) {
+            console.error("Failed to save message:", error);
+        }
+});
 
     console.log(`User joined room: user:${userId}`);
 
