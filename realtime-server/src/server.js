@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const connectDatabase = require("./config/database");
 require("dotenv").config();
 
 const app = express();
@@ -20,6 +21,8 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
+
+connectDatabase();
 
 server.listen(PORT, () => {
     console.log(`Realtime server running on PORT: ${PORT}`);
