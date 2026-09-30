@@ -30,6 +30,10 @@
             console.log("New message received:", data);
         });
 
+        socket.on("message:history", (messages) => {
+            console.log("Chat history:", messages);
+        });
+
         socket.on("disconnect", () => {
             console.log("Disconnected from server");
         });

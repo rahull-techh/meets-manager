@@ -33,11 +33,27 @@ io.on("connection", (socket) => {
 
     socket.join(`user:${userId}`);
 
-    socket.on("meeting:join", (meetingId) => {
+    socket.on("meeting:join", async (meetingId) => {
+        if (!meetingId) {
+            return;
+        }
+
         socket.join(`meeting:${meetingId}`);
+
         console.log(
             `User ${userId} joined meeting: ${meetingId}`
         );
+
+        try {
+            const messages = await Message.find({ meetingId })
+                .sort({ createdAt: 1 })
+                .limit(50);
+
+            socket.emit("message:history", messages);
+
+        } catch (error) {
+            console.error("Failed to fetch message history:", error);
+        }
     });
 
     socket.on("message:send", async ({ meetingId, message }) => {
