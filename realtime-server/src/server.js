@@ -24,6 +24,14 @@ const PORT = process.env.PORT || 5000;
 
 connectDatabase();
 
+io.on("connection", (socket) => {
+    console.log("Client connected", socket.id);
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected", socket.id);
+    });
+});
+
 server.listen(PORT, () => {
     console.log(`Realtime server running on PORT: ${PORT}`);
 });
