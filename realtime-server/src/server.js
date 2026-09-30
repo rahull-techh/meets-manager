@@ -32,6 +32,28 @@ io.on("connection", (socket) => {
 
     socket.join(`user:${userId}`);
 
+    socket.on("meeting:join", (meetingId) => {
+        socket.join(`meeting:${meetingId}`);
+        console.log(
+            `User ${userId} joined meeting: ${meetingId}`
+        );
+    });
+
+    socket.on("message:send", ({ meetingId, message }) => {
+        if (!meetingId || !message) {
+            return;
+        }
+
+        console.log(
+            `Message from ${userId} in meeting ${meetingId}: ${message}`
+        );
+
+        io.to(`meeting:${meetingId}`).emit("message:new", {
+            userId,
+            message,
+        });
+    });
+
     console.log(`User joined room: user:${userId}`);
 
     socket.on("disconnect", () => {

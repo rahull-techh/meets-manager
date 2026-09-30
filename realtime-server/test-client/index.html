@@ -9,10 +9,25 @@
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
     <script>
-        const socket = io("http://localhost:5000");
+        const userId = "user123";
+        const socket = io("http://localhost:5000", {
+            auth: {
+                userId: userId
+            }
+        });
 
         socket.on("connect", () => {
             console.log("Connected to server:", socket.id);
+
+            socket.emit("meeting:join", "meeting123");
+
+            socket.emit("message:send", {
+                meetingId: "meeting123",
+                message: "Hello from user123"
+            });
+        });
+        socket.on("message:new", (data) => {
+            console.log("New message received:", data);
         });
 
         socket.on("disconnect", () => {
