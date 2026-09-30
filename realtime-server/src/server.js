@@ -25,10 +25,17 @@ const PORT = process.env.PORT || 5000;
 connectDatabase();
 
 io.on("connection", (socket) => {
-    console.log("Client connected", socket.id);
+    const userId = socket.handshake.auth.userId;
+
+    console.log("Client connected:", socket.id);
+    console.log("User ID:", userId);
+
+    socket.join(`user:${userId}`);
+
+    console.log(`User joined room: user:${userId}`);
 
     socket.on("disconnect", () => {
-        console.log("Client disconnected", socket.id);
+        console.log("Client disconnected:", socket.id);
     });
 });
 
