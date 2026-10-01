@@ -6,6 +6,8 @@
 <body>
     <h1>Socket.IO Test</h1>
 
+    <button id="leaveMeeting">Leave Meeting</button>
+
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
     <script>
@@ -32,6 +34,19 @@
 
         socket.on("message:history", (messages) => {
             console.log("Chat history:", messages);
+        });
+
+        socket.on("participant:joined", (data) => {
+            console.log("Participant joined:", data.userId);
+        });
+
+        socket.emit("meeting:leave", "meeting123");
+
+        document.getElementById("leaveMeeting").addEventListener("click", () => {
+            socket.emit("meeting:leave", "meeting123");
+        });
+        socket.on("participant:left", (data) => {
+            console.log("Participant left:", data.userId);
         });
 
         socket.on("disconnect", () => {

@@ -1,9 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const Message = require("./models/message");
 const { Server } = require("socket.io");
+const { redisClient, connectRedis } = require("./config/redis");
 const connectDatabase = require("./config/database");
-require("dotenv").config();
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 connectDatabase();
+connectRedis();
 
 io.on("connection", (socket) => {
     const userId = socket.handshake.auth.userId;
@@ -34,15 +36,39 @@ io.on("connection", (socket) => {
     socket.join(`user:${userId}`);
 
     socket.on("meeting:join", async (meetingId) => {
-        if (!meetingId) {
-            return;
-        }
-
         socket.join(`meeting:${meetingId}`);
+        await redisClient.sAdd(
+            `meeting:${meetingId}:users`,
+            userId
+        );
+        io.to(`meeting:${meetingId}`).emit("participant:joined", {
+            userId,
+        });
 
         console.log(
             `User ${userId} joined meeting: ${meetingId}`
         );
+
+        socket.on("meeting:leave", async (meetingId) => {
+            if (!meetingId) {
+                return;
+            }
+
+            socket.leave(`meeting:${meetingId}`);
+
+            await redisClient.sRem(
+                `meeting:${meetingId}:users`,
+                userId
+            );
+
+            io.to(`meeting:${meetingId}`).emit("participant:left", {
+                userId,
+            });
+
+            console.log(
+                `User ${userId} left meeting: ${meetingId}`
+            );
+        });
 
         try {
             const messages = await Message.find({ meetingId })
