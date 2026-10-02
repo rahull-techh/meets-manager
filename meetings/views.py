@@ -7,6 +7,7 @@ from .serializers import (
     MeetingSerializer,
     MeetingParticipantSerializer
 )
+from django.utils import timezone
 
 from .models import Meeting
 from .serializers import MeetingSerializer
@@ -100,4 +101,37 @@ class JoinParticipantAPIView(APIView):
             status=status.HTTP_201_CREATED if created
             else status.HTTP_200_OK
         )
-    
+class LeaveParticipantAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, meeting_id):
+
+        try:
+            meeting = Meeting.objects.get(
+                meeting_id=meeting_id
+            )
+        except Meeting.DoesNotExist:
+            return Response(
+                {"error": "Meeting not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        try:
+            participant = MeetingParticipant.objects.get(
+                meeting=meeting,
+                user=request.user
+            )
+        except MeetingParticipant.DoesNotExist:
+            return Response(
+                {"error": "You have not joined this meeting"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        participant.left_at = timezone.now()
+        participant.save()
+
+        return Response(
+            MeetingParticipantSerializer(participant).data,
+            status=status.HTTP_200_OK
+        )
