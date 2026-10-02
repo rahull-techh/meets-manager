@@ -135,3 +135,76 @@ class LeaveParticipantAPIView(APIView):
             MeetingParticipantSerializer(participant).data,
             status=status.HTTP_200_OK
         )
+
+
+class MeetingParticipantsAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, meeting_id):
+
+        try:
+            meeting = Meeting.objects.get(
+                meeting_id=meeting_id
+            )
+        except Meeting.DoesNotExist:
+            return Response(
+                {"error": "Meeting not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        participants = MeetingParticipant.objects.filter(
+            meeting=meeting
+        ).order_by("joined_at")
+
+        serializer = MeetingParticipantSerializer(
+            participants,
+            many=True
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+
+class MeetingUpdateAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, meeting_id):
+
+        try:
+            meeting = Meeting.objects.get(
+                meeting_id=meeting_id
+            )
+        except Meeting.DoesNotExist:
+            return Response(
+                {"error": "Meeting not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if meeting.host != request.user:
+            return Response(
+                {"error": "Only the host can update this meeting"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = MeetingSerializer(
+            meeting,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
