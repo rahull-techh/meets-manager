@@ -208,3 +208,32 @@ class MeetingUpdateAPIView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class MeetingDeleteAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, meeting_id):
+
+        try:
+            meeting = Meeting.objects.get(
+                meeting_id=meeting_id
+            )
+        except Meeting.DoesNotExist:
+            return Response(
+                {"error": "Meeting not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if meeting.host != request.user:
+            return Response(
+                {"error": "Only the host can delete this meeting"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        meeting.delete()
+
+        return Response(
+            {"message": "Meeting deleted successfully"},
+            status=status.HTTP_200_OK
+        )
