@@ -2,6 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from .models import Meeting, MeetingParticipant
+from .serializers import (
+    MeetingSerializer,
+    MeetingParticipantSerializer
+)
 
 from .models import Meeting
 from .serializers import MeetingSerializer
@@ -68,3 +73,31 @@ class JoinMeetingAPIView(APIView):
             MeetingSerializer(meeting).data,
             status=status.HTTP_200_OK
         )    
+
+class JoinParticipantAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, meeting_id):
+
+        try:
+            meeting = Meeting.objects.get(
+                meeting_id=meeting_id
+            )
+        except Meeting.DoesNotExist:
+            return Response(
+                {"error": "Meeting not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        participant, created = MeetingParticipant.objects.get_or_create(
+            meeting=meeting,
+            user=request.user
+        )
+
+        return Response(
+            MeetingParticipantSerializer(participant).data,
+            status=status.HTTP_201_CREATED if created
+            else status.HTTP_200_OK
+        )
+    
