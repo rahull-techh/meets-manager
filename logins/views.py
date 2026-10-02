@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import LoginSerializer
+from rest_framework.permissions import IsAuthenticated
 
 from datetime import timedelta
 import secrets
@@ -251,3 +252,20 @@ def logout_user(request):
     return JsonResponse({
         "message": "Logout successful"
     }, status=200)
+
+class ProfileAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        return Response({
+            "message": "You are authenticated",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email
+            }
+        })
+    
