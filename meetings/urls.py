@@ -8,6 +8,8 @@ from .views import (
     MeetingParticipantsAPIView,
     MeetingUpdateAPIView,
     MeetingDeleteAPIView,
+    StartMeetingAPIView,
+    EndMeetingAPIView,
 )
 urlpatterns = [
 
@@ -19,5 +21,7 @@ urlpatterns = [
     path("participants/<uuid:meeting_id>/",MeetingParticipantsAPIView.as_view(),name="meeting_participants"),
     path("update/<uuid:meeting_id>/",MeetingUpdateAPIView.as_view(),name="meeting_update"),
     path("delete/<uuid:meeting_id>/", MeetingDeleteAPIView.as_view(),name="meeting_delete"),
+    path("start/<uuid:meeting_id>/", StartMeetingAPIView.as_view(),name="start_meeting"),
+    path("end/<uuid:meeting_id>/", EndMeetingAPIView.as_view(),name="end_meeting"),
 
 ]

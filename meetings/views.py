@@ -265,3 +265,39 @@ class StartMeetingAPIView(APIView):
         },
         status= status.HTTP_200_OK
         )
+
+
+class EndMeetingAPIView(APIView):
+
+    permission_classes =[IsAuthenticated]
+
+    def post(self,request,meeting_id):
+
+        try:
+            meeting = Meeting.objects.get(
+                meeting_id = meeting_id
+            )
+        except Meeting.DoesNotExist:
+            return Response({
+                "error":"Meeting doesnot exist"},
+                status= status.HTTP_404_NOT_FOUND
+            )
+
+        if meeting.host != request.user:
+            return Response({"error":"Only Host can end the meeting"},
+                            status= status.HTTP_403_FORBIDDEN
+            )
+        if not meeting.is_active:
+            return Response({"error":
+                 "Meeting is not active"},
+                 status= status.HTTP_400_BAD_REQUEST
+                )
+        meeting.is_active = True
+        meeting.save(update_fields=["is_active"])
+
+        return Response({"message": "Meeting ended successfully",
+                "meeting_id": str(meeting.meeting_id),
+                "is_active": meeting.is_active},
+                
+                status=status.HTTP_200_OK
+            )
