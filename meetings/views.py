@@ -292,7 +292,7 @@ class EndMeetingAPIView(APIView):
                  "Meeting is not active"},
                  status= status.HTTP_400_BAD_REQUEST
                 )
-        meeting.is_active = True
+        meeting.is_active = False
         meeting.save(update_fields=["is_active"])
 
         return Response({"message": "Meeting ended successfully",
@@ -301,3 +301,20 @@ class EndMeetingAPIView(APIView):
                 
                 status=status.HTTP_200_OK
             )
+
+class MeetingHistoryAPIView(APIView):
+
+    permission_classes=[IsAuthenticated]
+
+    def get(self,request):
+
+        meetings = Meeting.objects.filter(
+            host = request.user).order_by("-created_at")
+
+        serializer = MeetingSerializer(meetings,many=True)
+
+        return Response(
+            serializer.data,
+            status= status.HTTP_200_OK
+        )
+    
