@@ -20,6 +20,12 @@ class MeetingSerializer(serializers.ModelSerializer):
             "created_at",
             "is_active",
         ]
+    def validate_scheduled_at(self,value):
+        from django.utils import timezone
+
+        if value <= timezone.now():
+            raise serializers.ValidationError("Meeting should be scheduled for Future time")
+        return value
 
 
 class MeetingParticipantSerializer(serializers.ModelSerializer):

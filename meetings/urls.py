@@ -24,6 +24,6 @@ urlpatterns = [
     path("delete/<uuid:meeting_id>/", MeetingDeleteAPIView.as_view(),name="meeting_delete"),
     path("start/<uuid:meeting_id>/", StartMeetingAPIView.as_view(),name="start_meeting"),
     path("end/<uuid:meeting_id>/", EndMeetingAPIView.as_view(),name="end_meeting"),
-    path("history/<uuid:meeting_id>/",MeetingHistoryAPIView.as_view(),name="meeting_history"),
+    path("history/",MeetingHistoryAPIView.as_view(),name="meeting_history"),
 
 ]
