@@ -237,3 +237,31 @@ class MeetingDeleteAPIView(APIView):
             {"message": "Meeting deleted successfully"},
             status=status.HTTP_200_OK
         )
+
+class StartMeetingAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+    def post(self, request,meeting_id):
+
+        try:
+            meeting = Meeting.objects.get(
+                meeting_id = meeting_id
+            )
+        except Meeting.DoesNotExist:
+            return Response ({"error": "Meeting Not found"},
+            status = status.HTTP_404_NOT_FOUND )
+
+        if meeting.host != request.user:
+            return Response({"error":"Only host can start this meeting"},
+                        status = status.HTTP_403_FORBIDDEN
+            )
+        meeting.is_active = True
+        meeting.save(update_fields=["is_active"])
+
+        return Response({
+            "message": "Meeting started successfully",
+            "meeting_id": str(meeting.meeting_id),
+            "is_active": meeting.is_active
+        },
+        status= status.HTTP_200_OK
+        )
