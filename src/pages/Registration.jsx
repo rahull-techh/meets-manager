@@ -12,31 +12,72 @@ const Registration = () => {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
 
-  const handleSendOtp = () => {
-    setError('')
-    setMessage('')
+  const handleSendOtp = async () => {
+  setError('')
+  setMessage('')
 
-    if (!email) {
-      setError('Please enter your email first')
+  if (!username || !email || !password) {
+    setError('Please enter username, email, and password first')
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('username', username)
+  formData.append('email', email)
+  formData.append('password', password)
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/register/', {
+      method: 'POST',
+      body: formData
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      setError(data.error || 'Could not send OTP')
       return
     }
 
-    setMessage('OTP request will be sent here')
+    setMessage('OTP sent to your email. Please check your inbox.')
+  } catch (error) {
+    setError('Unable to connect to the Django server')
+  }
+}
+
+  const handleRegister = async (e) => {
+  e.preventDefault()
+
+  setError('')
+  setMessage('')
+
+  if (!name || !username || !email || !otp || !password) {
+    setError('Please fill in all the fields')
+    return
   }
 
-  const handleRegister = (e) => {
-    e.preventDefault()
+  const formData = new FormData()
+  formData.append('email', email)
+  formData.append('otp', otp)
 
-    setError('')
-    setMessage('')
+  try {
+    const response = await fetch('http://127.0.0.1:8000/verifyotp/', {
+      method: 'POST',
+      body: formData
+    })
 
-    if (!name || !username || !email || !otp || !password) {
-      setError('Please fill in all the fields')
+    const data = await response.json()
+
+    if (!response.ok) {
+      setError(data.error || 'OTP verification failed')
       return
     }
 
-    console.log('Registration form submitted')
+    setMessage('Account verified successfully. You can now login.')
+  } catch (error) {
+    setError('Unable to connect to the Django server')
   }
+}
 
   return (
     <div className='min-h-screen bg-slate-100 flex items-center justify-center px-4 py-8'>

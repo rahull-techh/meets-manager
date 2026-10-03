@@ -24,6 +24,4 @@ db.sqlite3
 
 # macOS
 .DS_Store
-
-meetings/__pycache__/
-*.pyc
+node_modules
