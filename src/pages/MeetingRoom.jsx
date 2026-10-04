@@ -1,9 +1,10 @@
 import React from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const MeetingRoom = () => {
   const navigate = useNavigate()
+  const { meetingId } = useParams()
   const videoRef = useRef(null)
   const streamRef = useRef(null)
 
@@ -12,12 +13,37 @@ const MeetingRoom = () => {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop())
-      }
-     }
-  }, [])
+  const token = localStorage.getItem('access_token')
+
+  if (!token || !meetingId) {
+    return
+  }
+
+  const socket = new WebSocket(
+    `ws://127.0.0.1:8000/ws/meetings/${meetingId}/?token=${token}`
+  )
+
+  socket.onopen = () => {
+    console.log('WebSocket connected')
+  }
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data)
+    console.log('WebSocket message:', data)
+  }
+
+  socket.onerror = (error) => {
+    console.error('WebSocket error:', error)
+  }
+
+  socket.onclose = () => {
+    console.log('WebSocket disconnected')
+  }
+
+  return () => {
+    socket.close()
+  }
+}, [meetingId])
 
   const toggleMedia = async (type) => {
     const isCamera = type === 'video'
