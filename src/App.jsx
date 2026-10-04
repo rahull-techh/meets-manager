@@ -5,6 +5,8 @@ import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import JoinMeeting from './components/JoinMeeting'
 import ScheduleMeeting from './components/ScheduleMeeting'
+import MeetingRoom from './pages/MeetingRoom'
+
 
 const App = () => {
   return (
@@ -17,6 +19,7 @@ const App = () => {
         <Route path='/dashboard' element= {<Dashboard />} />
         <Route path='/join-meeting' element= {<JoinMeeting />} />
         <Route path='/schedule-meeting' element= {<ScheduleMeeting />} />
+        <Route path='/meeting-room' element={ <MeetingRoom />} />
       </Routes>
     </div>
   )
