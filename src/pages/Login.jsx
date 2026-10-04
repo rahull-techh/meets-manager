@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link , useNavigate} from 'react-router-dom'
+
 
 const Login = () => {
+  const navigate = useNavigate()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -42,14 +44,15 @@ const handleLogin = async (e) => {
       return;
     }
 
-    // Save JWT tokens
+    
     localStorage.setItem('access_token', data.access);
     localStorage.setItem('refresh_token', data.refresh);
 
-    // Save user information
+    
     localStorage.setItem('user', JSON.stringify(data.user));
 
     console.log('Login successful:', data.user);
+    navigate('/dashboard')
 
   } catch (error) {
     console.error(error);
