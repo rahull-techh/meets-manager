@@ -2,6 +2,21 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 
+const meetings = [
+  {
+    id: 1,
+    title: 'Team Discussion 1',
+    date: '5 oct 2026',
+    time: '10:00 AM'
+  },
+  {
+    id: 2,
+    title: 'Team Discussion 2',
+    date: '9 Oct 2026',
+    time: '2:00 PM'
+  }
+]
+
 const Dashboard = () => {
   return (
     <div className='min-h-screen bg-[#F6F6F2] flex flex-col md:flex-row'>
@@ -49,17 +64,36 @@ const Dashboard = () => {
 
 
         <section className='mt-10'>
-          <h2 className='text-xl font-bold text-[#263A43] mb-5'>
-            Upcoming Meetings
-          </h2>
+            <h2 className='text-xl font-bold text-[#263A43] mb-5'>
+                Upcoming Meetings
+            </h2>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
+                {meetings.map((meeting )=>(
+                    <div
+                    key={meeting.id}
+                    className='bg-white border border-[#E5E7E3] rounded-xl p-5'>
+                        <h3
+                        className='text-lg font-semibold text-[#263A43]]'>
+                            {meeting.title}
+                        </h3>
+                        <p
+                        className='mt-2 text-sm text-[#687780]'>
+                            {meeting.date}
+                        </p>
+                        <p
+                        className='mt-2 text-sm text-[#687780]'>
+                            {meeting.time}
 
-          <div className='bg-white border border-[#E5E7E3] rounded-xl p-6'>
-            <p className='text-[#687780] text-sm'>
-              No upcoming meetings yet.
-            </p>
-          </div>
+                        </p>
+                        <button className='mt-4 bg-[#E7EFEB] text-[#477568] px-4 py-2 rounded-lg'>
+                            Join meeting
+                        </button>
+                    </div>
+                ))}
+
+            </div>
         </section>
-      </main>
+    </main>
     </div>
   )
 }
