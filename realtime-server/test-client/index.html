@@ -1,57 +1,457 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Socket Test</title>
-</head>
-<body>
-    <h1>Socket.IO Test</h1>
 
-    <button id="leaveMeeting">Leave Meeting</button>
+<head>
+    <title>WebRTC Test</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px 14px;
+        }
+
+        video {
+            width: 400px;
+            background: black;
+            margin: 10px;
+        }
+
+        #videos {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>WebRTC Test</h1>
+
+    <div>
+        <input id="userId" placeholder="User ID" value="userA" />
+
+        <input id="meetingId" placeholder="Meeting ID" value="meeting123" />
+
+        <button id="startBtn">
+            Start Camera
+        </button>
+
+        <button id="joinBtn">
+            Join Meeting
+        </button>
+    </div>
+
+    <h2>My Camera</h2>
+
+    <video id="localVideo" autoplay muted playsinline></video>
+
+    <h2>Remote Camera</h2>
+
+    <video id="remoteVideo" autoplay playsinline muted></video>
+    <pre id="logs"></pre>
 
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
     <script>
-        const userId = "user123";
+
         const socket = io("http://localhost:5000", {
-            auth: {
-                userId: userId
+            autoConnect: false
+        });
+
+        let userId;
+        let meetingId;
+
+        let localStream;
+        let peerConnection;
+
+        let remoteUserId;
+
+        const localVideo =
+            document.getElementById("localVideo");
+
+        const remoteVideo =
+            document.getElementById("remoteVideo");
+
+        const logs =
+            document.getElementById("logs");
+
+
+        function log(message) {
+            console.log(message);
+            logs.textContent += message + "\n";
+        }
+
+
+        // Create WebRTC peer connection
+        function createPeerConnection(targetUserId) {
+
+            remoteUserId = targetUserId;
+
+            peerConnection =
+                new RTCPeerConnection({
+                    iceServers: [
+                        {
+                            urls:
+                                "stun:stun.l.google.com:19302"
+                        }
+                    ]
+                });
+
+            peerConnection.onconnectionstatechange = () => {
+                log("Connection state: " + peerConnection.connectionState);
+            };
+
+            peerConnection.oniceconnectionstatechange = () => {
+                log("ICE state: " + peerConnection.iceConnectionState);
+            };
+
+            peerConnection.onicegatheringstatechange = () => {
+                log("ICE gathering: " + peerConnection.iceGatheringState);
+            };
+
+
+            // Send our ICE candidates
+            peerConnection.onicecandidate =
+                (event) => {
+
+                    if (event.candidate) {
+
+                        socket.emit(
+                            "webrtc:ice-candidate",
+                            {
+                                targetUserId:
+                                    remoteUserId,
+
+                                candidate:
+                                    event.candidate
+                            }
+                        );
+                    }
+                };
+
+
+            // Receive remote video/audio
+            peerConnection.ontrack = async (event) => {
+                log("Remote stream received");
+
+                event.streams[0].getTracks().forEach((track) => {
+                    log(
+                        `Remote track: ${track.kind}, enabled=${track.enabled}, readyState=${track.readyState}`
+                    );
+                });
+
+                remoteVideo.srcObject = event.streams[0];
+
+                // Allow autoplay for the test
+                remoteVideo.muted = true;
+                remoteVideo.autoplay = true;
+                remoteVideo.playsInline = true;
+
+                try {
+                    await remoteVideo.play();
+                    log("Remote video playing");
+                } catch (error) {
+                    console.error(
+                        "Remote video play failed:",
+                        error
+                    );
+
+                    log("Remote video autoplay blocked");
+                }
+            };
+
+
+            // Add our camera + microphone
+            if (localStream) {
+
+                localStream
+                    .getTracks()
+                    .forEach((track) => {
+
+                        peerConnection.addTrack(
+                            track,
+                            localStream
+                        );
+
+                    });
             }
-        });
 
-        socket.on("connect", () => {
-            console.log("Connected to server:", socket.id);
 
-            socket.emit("meeting:join", "meeting123");
+            return peerConnection;
+        }
 
-            socket.emit("message:send", {
-                meetingId: "meeting123",
-                message: "Hello from user123"
-            });
-        });
-        socket.on("message:new", (data) => {
-            console.log("New message received:", data);
-        });
 
-        socket.on("message:history", (messages) => {
-            console.log("Chat history:", messages);
-        });
+        // Start camera
+        document
+            .getElementById("startBtn")
+            .onclick = async () => {
 
-        socket.on("participant:joined", (data) => {
-            console.log("Participant joined:", data.userId);
-        });
+                try {
 
-        socket.emit("meeting:leave", "meeting123");
+                    localStream =
+                        await navigator.mediaDevices
+                            .getUserMedia({
+                                video: true,
+                                audio: true
+                            });
 
-        document.getElementById("leaveMeeting").addEventListener("click", () => {
-            socket.emit("meeting:leave", "meeting123");
-        });
-        socket.on("participant:left", (data) => {
-            console.log("Participant left:", data.userId);
-        });
+                    localVideo.srcObject =
+                        localStream;
 
-        socket.on("disconnect", () => {
-            console.log("Disconnected from server");
-        });
+                    log("Camera and microphone started");
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    log(
+                        "Could not access camera/microphone: "
+                        + error.message
+                    );
+                }
+            };
+
+
+        // Join meeting
+        document
+            .getElementById("joinBtn")
+            .onclick = () => {
+
+                userId =
+                    document
+                        .getElementById("userId")
+                        .value;
+
+                meetingId =
+                    document
+                        .getElementById("meetingId")
+                        .value;
+
+
+                if (!userId || !meetingId) {
+
+                    alert(
+                        "Enter User ID and Meeting ID"
+                    );
+
+                    return;
+                }
+
+
+                socket.auth = {
+                    userId
+                };
+
+                socket.connect();
+
+
+                socket.emit(
+                    "meeting:join",
+                    meetingId
+                );
+
+                log(
+                    `Joined meeting as ${userId}`
+                );
+            };
+
+
+        // Someone else joined the meeting
+        socket.on(
+            "participant:joined",
+            async ({ userId: joinedUserId }) => {
+
+                log(
+                    `${joinedUserId} joined the meeting`
+                );
+
+
+                // The existing participant
+                // creates the offer
+                createPeerConnection(
+                    joinedUserId
+                );
+
+
+                const offer =
+                    await peerConnection
+                        .createOffer();
+
+
+                await peerConnection
+                    .setLocalDescription(offer);
+
+
+                socket.emit(
+                    "webrtc:offer",
+                    {
+                        targetUserId:
+                            joinedUserId,
+
+                        offer
+                    }
+                );
+
+
+                log("Offer sent");
+            }
+        );
+
+
+        // Receive offer
+        socket.on(
+            "webrtc:offer",
+            async ({
+                fromUserId,
+                offer
+            }) => {
+
+                log(
+                    `Offer received from ${fromUserId}`
+                );
+
+
+                createPeerConnection(
+                    fromUserId
+                );
+
+
+                await peerConnection
+                    .setRemoteDescription(
+                        offer
+                    );
+
+
+                const answer =
+                    await peerConnection
+                        .createAnswer();
+
+
+                await peerConnection
+                    .setLocalDescription(
+                        answer
+                    );
+
+
+                socket.emit(
+                    "webrtc:answer",
+                    {
+                        targetUserId:
+                            fromUserId,
+
+                        answer
+                    }
+                );
+
+
+                log("Answer sent");
+            }
+        );
+
+
+        // Receive answer
+        socket.on(
+            "webrtc:answer",
+            async ({
+                fromUserId,
+                answer
+            }) => {
+
+                log(
+                    `Answer received from ${fromUserId}`
+                );
+
+
+                if (!peerConnection) {
+                    return;
+                }
+
+
+                await peerConnection
+                    .setRemoteDescription(
+                        answer
+                    );
+
+
+                log(
+                    "Remote description set"
+                );
+            }
+        );
+
+
+        // Receive ICE candidate
+        socket.on(
+            "webrtc:ice-candidate",
+            async ({
+                fromUserId,
+                candidate
+            }) => {
+
+                log(
+                    `ICE candidate received from ${fromUserId}`
+                );
+
+
+                if (!peerConnection) {
+                    return;
+                }
+
+
+                try {
+
+                    await peerConnection
+                        .addIceCandidate(
+                            candidate
+                        );
+
+                } catch (error) {
+
+                    console.error(
+                        "ICE error:",
+                        error
+                    );
+                }
+            }
+        );
+
+
+        socket.on(
+            "connect",
+            () => {
+
+                log(
+                    "Socket connected: "
+                    + socket.id
+                );
+
+            }
+        );
+
+
+        socket.on(
+            "disconnect",
+            () => {
+
+                log(
+                    "Socket disconnected"
+                );
+
+            }
+        );
+
     </script>
+
 </body>
+
 </html>
