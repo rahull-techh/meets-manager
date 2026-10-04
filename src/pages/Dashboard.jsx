@@ -45,9 +45,10 @@ const Dashboard = () => {
             <p className='mt-2 text-sm text-[#687780]'>
               Join an existing meeting using a code.
             </p>
-            <button className='mt-5 bg-[#E7EFEB] text-[#477568] px-5 py-2 rounded-lg font-medium'>
-              Join Now
-            </button>
+            <Link to='/join-meeting'
+            className='inline-block mt-5 bg-[#E7EFEB] px-5 py-2 rounded-lg font-medium'>
+                Join Now
+            </Link>
           </div>
           <div className='bg-white border border-[#E5E7E3] rounded-xl p-6'>
             <h2 className='text-xl font-semibold text-[#263A43]'>
