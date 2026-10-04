@@ -4,6 +4,7 @@ import Registration from './pages/Registration'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import JoinMeeting from './components/JoinMeeting'
+import ScheduleMeeting from './components/ScheduleMeeting'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path='/register' element ={<Registration />} />
         <Route path='/dashboard' element= {<Dashboard />} />
         <Route path='/join-meeting' element= {<JoinMeeting />} />
+        <Route path='/schedule-meeting' element= {<ScheduleMeeting />} />
       </Routes>
     </div>
   )

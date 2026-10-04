@@ -57,9 +57,10 @@ const Dashboard = () => {
             <p className='mt-2 text-sm text-[#687780]'>
               Plan your next meeting with your team.
             </p>
-            <button className='mt-5 bg-[#E7EFEB] text-[#477568] px-5 py-2 rounded-lg font-medium'>
-              Schedule
-            </button>
+             <Link to='/schedule-meeting'
+            className='inline-block mt-5 bg-[#E7EFEB] px-5 py-2 rounded-lg font-medium'>
+                Schedule a Meeting
+            </Link>
           </div>
         </section>
 
