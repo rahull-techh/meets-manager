@@ -7,44 +7,57 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-    setError('');
-     if (!username || !password) {
-      setError('Please enter username and password');
+  setError('');
+
+  if (!username || !password) {
+    setError('Please enter username and password');
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/login/', {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json',
+  },
+    body: JSON.stringify({
+    username: username,
+    password: password,
+  }),
+});
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(
+        data.non_field_errors?.[0] ||
+        data.error ||
+        'Invalid username or password'
+      );
       return;
     }
 
-    setLoading(true);
+    // Save JWT tokens
+    localStorage.setItem('access_token', data.access);
+    localStorage.setItem('refresh_token', data.refresh);
 
-    try {
-        await new Promise((resolve) => setTimeout(resolve, 800));
+    // Save user information
+    localStorage.setItem('user', JSON.stringify(data.user));
 
-      const users = [
-        {
-          username: 'admin',
-          password: '123456'
-        }
-      ];
-       const user = users.find((item) => item.username === username);
+    console.log('Login successful:', data.user);
 
-      if (!user) {
-        setError('No account exists with this username');
-        return;
-      }
-
-      if (user.password !== password) {
-        setError('Incorrect password');
-        return;
-      }
-      console.log('Login successful');
-    } catch (error) {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error(error);
+    setError('Unable to connect to the Django server');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className='min-h-screen bg-gray-100 flex items-center justify-center px-4'>
