@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import Features from "../components/Features";
+import About from "../components/About";
+import Contact from "../components/Contact";
 
 const Home = () => {
   return (
@@ -119,8 +122,12 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <Features />
+      <About />
+      <Contact />
     </div>
-  );
-};
+  )
+}
 
 export default Home
