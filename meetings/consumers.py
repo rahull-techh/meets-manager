@@ -30,7 +30,7 @@ class MeetingConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 "type": "user_joined",
-                "username": "Guest",
+                "username": self.scope["user"].username,
             }
         )
 
@@ -46,7 +46,7 @@ class MeetingConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     "type": "user_left",
-                    "username": "Guest",
+                    "username": self.scope["user"].username,
                 }
             )
 
@@ -55,7 +55,7 @@ class MeetingConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
 
         message = data.get("message", "")
-        username = data.get("username", "Guest")
+        username = self.scope["user"].username
 
         await self.channel_layer.group_send(
             self.room_group_name,
