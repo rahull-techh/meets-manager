@@ -1,27 +1,25 @@
+
+# Environment variables and secrets
 .env
-db.sqlite3
-logins/__pycache__/
-.env
-logins/migrations/__pycache__/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+.env.*
+
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 
 # Virtual environment
 venv/
+.venv/
 
-# Environment variables
-.env
-
-# Django
+# Django database
 db.sqlite3
+
+# Node.js
+node_modules/
+dist/
 
 # macOS
 .DS_Store
+ HEAD
 node_modules
+ d03a113 (Add VOXE dashboard layout)
