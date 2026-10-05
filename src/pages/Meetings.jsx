@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 
@@ -120,7 +121,7 @@ const Meetings = () => {
                                 </div>
 
                                 <Link
-                                    to={`/join-meeting/${meeting.meeting_id}`}
+                                    to={`/meeting/${meeting.meeting_id}`}
                                     className='bg-[#E7EFEB] text-[#263A43] px-5 py-2 rounded-lg'
                                 >
                                     Join

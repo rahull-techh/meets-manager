@@ -24,19 +24,16 @@ const Sidebar = () => {
           Dashboard
         </Link>
 
-        <a
-          href='#meetings'
-          className='text-[#687780] hover:bg-[#F6F6F2] rounded-lg px-4 py-3 transition-colors'
-        >
-          Meetings
-        </a>
+        <Link
+          to='/meetings'
+          className='text-[#687780] hover:bg-[#F6F6F2] rounded-lg px-4 py-3 transition-colors'>
+            Meetings
+        </Link>
 
-        <a
-          href='#contacts'
-          className='text-[#687780] hover:bg-[#F6F6F2] rounded-lg px-4 py-3 transition-colors'
-        >
-          Contacts
-        </a>
+        <Link
+          to='/contacts'
+          className='text-[#687780] hover:bg-[#F6F6F2] rounded-lg px-4 py-3 transition-colors'>
+            Contacts </Link>
 
         <a
           href='#settings'
