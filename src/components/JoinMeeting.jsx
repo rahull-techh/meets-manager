@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const JoinMeeting =() => {
-    const [meetingCode, setMeetingCode] = useState(' ')
+     const navigate = useNavigate()
+    const [meetingCode, setMeetingCode] = useState('')
 
     const handleJoin =(e) => {
         e.preventDefault()
@@ -9,7 +11,7 @@ const JoinMeeting =() => {
             alert('Please enter a meeting code')
             return
         }
-        alert (`meeting code entered : ${meetingCode}`)
+        navigate(`/meeting-room/${meetingCode.trim()}`)
 
     }
 
@@ -23,9 +25,9 @@ const JoinMeeting =() => {
                     Enter the meeting code to join your team.
                 </p>
                 <form onSubmit= {handleJoin} className='mt-6'>
-                    <lable className='text-sm font-medium text-[#263AA43] mb-2'>
+                    <label className='text-sm font-medium text-[#263A43] mb-2'>
                         Meeting Code
-                    </lable>
+                    </label>
                     
                     <input type='text' value={meetingCode}
                     onChange={(e) => setMeetingCode(e.target.value)}
