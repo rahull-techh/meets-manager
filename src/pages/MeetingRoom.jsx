@@ -1,23 +1,78 @@
 import React from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate , useParams} from 'react-router-dom'
 
 const MeetingRoom = () => {
+
   const navigate = useNavigate()
+  const{meetingId} = useParams()
+
+  const socketRef = useRef(null)
+  const [message, setMessage] = useState('')
+
   const videoRef = useRef(null)
   const streamRef = useRef(null)
+  const [messages, setMessages] = useState([])
+  const [connected, setConnected] = useState(false)
 
   const [micOn, setMicOn] = useState(false)
   const [cameraOn, setCameraOn] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
+    const token = localStorage.getItem('access_token')
+
+    if(!token){
+        navigate('/login')
+        return 
+    }
+
+    const socket = new WebSocket(
+        `ws://127.0.0.1:8000/ws/meetings/${meetingId}/?token=${token}`
+    )
+
+    socketRef.current = socket
+    socket.onopen =() =>{
+        setConnected(true)
+    }
+    socket.onmessage =(event) =>{
+        const data = JSON.parse(event.data)
+        
+        setMessages((oldMessages) => [
+            ...oldMessages,
+            data
+        ])
+    }
+
+    socket.onclose = () => {
+        setConnected(false)
+    }
+    socket.onerror = (error) => {
+        console.log('WebSocket error : ', error);
+        
+    }
     return () => {
+        socket.close()
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop())
       }
      }
-  }, [])
+  }, [meetingId,navigate])
+  const sendMessage = (e) => {
+    e.preventDefault()
+    if(!message.trim()){
+        return
+    }
+    if(socketRef.current?.readyState === WebSocket.OPEN){
+        socketRef.current.send(
+            JSON.stringify({
+                message: message
+            })
+        )
+
+        setMessage('')
+    }
+  }
 
   const toggleMedia = async (type) => {
     const isCamera = type === 'video'
@@ -80,6 +135,9 @@ const MeetingRoom = () => {
         <div className='bg-white p-4 flex justify-between items-center'>
         <h1 className='text-xl font-bold text-[#263A43]'>VOXE</h1>
         <h2 className='text-sm text-[#687780]'>Team Meeting</h2>
+        <p className='text-sm text-[#687780]'>
+            {connected ? 'Connected' : ' Connecting...'}
+        </p>
       </div>
 
       <div className='flex-1 flex flex-col items-center justify-center p-4'>
@@ -129,7 +187,45 @@ const MeetingRoom = () => {
           className='bg-red-600 text-white px-4 py-3 rounded-lg'>
           Leave
         </button>
-    </div></div>
+    </div>
+    <div className='bg-white p-4'>
+        <h2 className='text-lg font-bold text-[#263A43]'>
+            Chat
+        </h2>
+    <div className='h-40 overflow-y-auto border rounded-lg p-3 mt-3'>
+        {messages.map((item, index) => (
+            <div key={index}>
+                {item.type === 'chat_message' && (
+                    <p>
+                        <b>{item.username}:</b>{item.message}
+                    </p>)}
+
+                    {item.type === 'user_joined' && (
+                        <p className='text-gray-500'>
+                            {item.username} joined the meeting
+                        </p>
+                    )}
+
+                    {item.type === 'user_left' && (
+                        <p className='text-gray-500'>
+                            {item.username} left the meeting 
+                        </p>
+                    )}
+                </div>
+        ))}
+
+    </div>
+
+    <form onSubmit = {sendMessage} className='flex gap-2 mt-3'>
+        <input type='text' value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder='Type a message ... '
+        className='border rounded-lg p-2 flex-1' />
+
+        <button type= 'submit' className='bg-[#477568] text-white px-4 py-2 rounded-lg'>Send</button>
+    </form>
+    </div>
+    </div>
   )
 }
 
