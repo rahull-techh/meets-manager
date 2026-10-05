@@ -20,6 +20,7 @@ const App = () => {
         <Route path='/join-meeting' element= {<JoinMeeting />} />
         <Route path='/schedule-meeting' element= {<ScheduleMeeting />} />
         <Route path='/meeting-room/:meetingId' element={ <MeetingRoom />} />
+        <Route path='/meeting/:meetingId' element={<MeetingRoom />} />
       </Routes>
     </div>
   )
