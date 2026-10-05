@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard'
 import JoinMeeting from './components/JoinMeeting'
 import ScheduleMeeting from './components/ScheduleMeeting'
 import MeetingRoom from './pages/MeetingRoom'
+import Meetings from './pages/Meetings'
+import Contact from './pages/Contact'
 
 
 const App = () => {
@@ -20,7 +22,12 @@ const App = () => {
         <Route path='/join-meeting' element= {<JoinMeeting />} />
         <Route path='/schedule-meeting' element= {<ScheduleMeeting />} />
         <Route path='/meeting-room/:meetingId' element={ <MeetingRoom />} />
+
         <Route path='/meeting/:meetingId' element={<MeetingRoom />} />
+
+        <Route path='/meetings' element={<Meetings />} />
+        <Route path='/contacts' element={<Contact />} />
+
       </Routes>
     </div>
   )
