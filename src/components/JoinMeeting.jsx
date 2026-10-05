@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const JoinMeeting = () => {
-    const navigate = useNavigate();
+const JoinMeeting =() => {
+     const navigate = useNavigate()
+    const [meetingCode, setMeetingCode] = useState('')
 
     const [meetingCode, setMeetingCode] = useState("");
     const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ const JoinMeeting = () => {
             setError("Please login again");
             return;
         }
+        navigate(`/meeting-room/${meetingCode.trim()}`)
 
         setLoading(true);
 
@@ -72,37 +74,21 @@ const JoinMeeting = () => {
                 <p className='mt-2 text-[#687780]'>
                     Enter the meeting code to join your team.
                 </p>
-
-                <form onSubmit={handleJoin} className='mt-6'>
-
-                    <label className='block text-sm font-medium text-[#263A43] mb-2'>
+                <form onSubmit= {handleJoin} className='mt-6'>
+                    <label className='text-sm font-medium text-[#263A43] mb-2'>
                         Meeting Code
                     </label>
+                    
+                    <input type='text' value={meetingCode}
+                    onChange={(e) => setMeetingCode(e.target.value)}
+                    placeholder='Enter meeting code'
+                    className='w-full border border-[#E5E7E3] rounded-lg p-3 outline-none focus:border-[#477568]' />
+                    <button type='submit'
+                    className='w-full mt-5 bg-[#477568] text-white py-3 rounded-xl'>
+                        Join a Meeting
+                        </button> 
 
-                    <input
-                        type='text'
-                        value={meetingCode}
-                        onChange={(e) => setMeetingCode(e.target.value)}
-                        placeholder='Enter meeting code'
-                        className='w-full border border-[#E5E7E3] rounded-lg p-3 outline-none focus:border-[#477568]'
-                    />
-
-                    {error && (
-                        <p className='mt-3 text-sm text-red-500'>
-                            {error}
-                        </p>
-                    )}
-
-                    <button
-                        type='submit'
-                        disabled={loading}
-                        className='w-full mt-5 bg-[#477568] text-white py-3 rounded-xl disabled:opacity-60'
-                    >
-                        {loading ? "Joining..." : "Join a Meeting"}
-                    </button>
-
-                </form>
-
+                    </form>
             </div>
 
         </div>

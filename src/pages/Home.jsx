@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import Features from "../components/Features";
 import About from "../components/About";
 import Contact from "../components/Contact";
+import Navbar from "../components/Navbar";
+
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-[#F5F8FC] text-[#24354D]">
-      //navbar still in progress
+      <Navbar />
 
       
       <section className="grid items-center gap-12 px-6 py-20 md:grid-cols-2 md:px-16 md:py-28">
