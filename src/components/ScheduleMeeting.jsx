@@ -2,19 +2,67 @@
 import { useState } from "react";
 
 const ScheduleMeeting =() => {
-    const [title, setTitle] = useState(' ')
-    const [date, setDate] = useState(' ')
-    const [time, setTime] = useState(' ')
-    const handleSchedule = (e) => {
+    const [title, setTitle] = useState('')
+    const [date, setDate] = useState('')
+    const [time, setTime] = useState('')
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+    const handleSchedule = async (e) => {
         e.preventDefault()
+        setError('')
 
         if(!title.trim() || !date || !time) {
             alert('please fill all the fields')
             return
         }
+        const token = localStorage.getItem('access_token')
+        
+        if(!token){
+            setError('Please login first')
+            return
+        }
+        setLoading(true)
 
-        alert('meeting details entered successfully!')
-    }
+        try{
+            const scheduledAt = `${date}T${time}:00`
+
+            const response = await fetch(
+                'http://127.0.0.1:8000/meetings/create/',
+                {
+                    method:'POST',
+                    headers:{
+                        'Content-Type' : 'application/json',
+                        'Authorization' : `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: title.trim(),
+                        scheduled_at: scheduledAt
+                    })
+                }
+            )
+
+            const data = await response.json()
+            if (!response.ok) {
+                 setError(data.detail || 'Unable to schedule meeting')
+                return}
+
+            alert('Meeting scheduled successfully!')
+            console.log('Meeting created:', data)
+
+            setTitle('')
+            setDate('')
+            setTime('')
+             } catch (error) {
+             console.error(error)
+             setError('Unable to connect to the server')
+
+             } finally {
+                 setLoading(false)
+                }
+            }
+
+        
+    
     return(
         <div className='min-h-screen bg-[#F6F6F2] flex items-center justify-center p-5'>
             <div className='bg-white p-8 rounded-xl border border-[#E5E7E3] w-full max-w-md'>
@@ -33,9 +81,9 @@ const ScheduleMeeting =() => {
                     placeholder='Enter meeting title'
                     className='w-full border border-[#E5E7E3] rounded-lg p-3 mb-4'/>
                     
-                    <lable className=' text-sm font-medium text-[#263A43] mb-2'>
+                    <label className=' text-sm font-medium text-[#263A43] mb-2'>
                         Date
-                    </lable>
+                    </label>
 
                     <input type='date'
                     value={date}
@@ -49,9 +97,17 @@ const ScheduleMeeting =() => {
                     onChange={(e ) => setTime(e.target.value)}
                     className="w-full border border-[#E5E7E3] rounded-lg p-3" />
 
+                    {error && (
+                        <p  className='text-red-600 text-sm mt-3'>
+                            {error}
+                        </p>
+                    )}
+
                     <button type='submit'
+                    disabled={loading}
+
                     className='w-full border bg-[#477568] text-white py-3 rounded-lg ' >
-                        Schedule Meeting </button>
+                        {loading ? 'Scheduling...' : 'Schedule Meeting' } </button>
                                         </form>
             </div>
 
