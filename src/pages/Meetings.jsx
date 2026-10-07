@@ -81,6 +81,38 @@ const Meetings = () => {
                 }
     }
 
+    const endMeeting = async (meetingId) => {
+        const token = localStorage.getItem('access_token')
+
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/meetings/end/${meetingId}/`,
+                {
+                    method: 'POST',
+                    headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        const data = await response.json()
+
+        if (!response.ok) {
+            alert(data.detail || 'Unable to end meeting')
+            return
+        }
+        setMeetings((oldMeetings) =>
+            oldMeetings.map((meeting) =>
+                meeting.meeting_id === meetingId
+                    ? { ...meeting, is_active: false }
+                    : meeting
+            )
+        )
+        } catch (error) {
+        console.error(error)
+        alert('Unable to connect to Django server')
+    }
+}
+
 
     return (
         <div className='min-h-screen bg-[#F6F6F2] flex flex-col md:flex-row'>
@@ -168,6 +200,12 @@ const Meetings = () => {
                                             Start
                                          </button>
                                     )}
+                                     {meeting.is_active && (
+                                        <button onClick={() => endMeeting(meeting.meeting_id)}
+                                        className='bg-red-500 text-white px-4 py-2 rounded-lg'>
+                                            End
+                                        </button>
+                                     )}
 
                                 <Link
                                     to={`/meeting/${meeting.meeting_id}`}
