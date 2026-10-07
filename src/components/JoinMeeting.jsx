@@ -5,7 +5,7 @@ const JoinMeeting =() => {
      const navigate = useNavigate()
     const [meetingCode, setMeetingCode] = useState('')
 
-    const [meetingCode, setMeetingCode] = useState("");
+    
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
