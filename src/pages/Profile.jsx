@@ -7,11 +7,34 @@ const Profile = () => {
 
      const [user, setUser] = useState(null)
      useEffect(() => {
-        const savedUser = localStorage.getItem('user')
-        if (savedUser) {
-            setUser(JSON.parse(savedUser))
+
+        const fetchProfile = async () => {
+            const token = localStorage.getItem('access_token')
+
+            if (!token) {
+                return
+            }
+             try {
+                const response = await fetch(
+                    'http://127.0.0.1:8000/profile/',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+                 const data = await response.json()
+
+                 if (response.ok) {git 
+                    setUser(data)
+                }
+            } catch (error) {
+                 console.error(error)
+            }
         }
-     },[])
+        fetchProfile()
+    }, [])
+
 
   return (
      
