@@ -118,6 +118,13 @@ const Meetings = () => {
                                     <p className='text-[#687780] mt-2'>
                                         {new Date(meeting.scheduled_at).toLocaleString()}
                                     </p>
+                                    {meeting.is_active ? (
+                                        <p className='text-sm text-green-600 mt-2'> Live now
+                                        </p>
+                                        ) : (
+                                            <p className='text-sm text-[#687780] mt-2'>Scheduled
+                                            </p>
+                                        )} 
                                 </div>
 
                                 <Link
@@ -160,6 +167,7 @@ const Meetings = () => {
                                     <p className='text-[#687780] mt-2'>
                                         {new Date(meeting.scheduled_at).toLocaleString()}
                                     </p>
+                                    
                                 </div>
                             ))}
 
