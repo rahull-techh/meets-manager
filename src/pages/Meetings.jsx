@@ -49,6 +49,39 @@ const Meetings = () => {
         meeting => new Date(meeting.scheduled_at) < new Date()
     )
 
+    const startMeeting = async (meetingId) => {
+        const token = localStorage.getItem('access_token')
+            try {
+                const response = await fetch(
+                     `http://127.0.0.1:8000/meetings/start/${meetingId}/`,
+                     {
+                        method: 'POST',
+                        headers: {
+                        Authorization: `Bearer ${token}`,
+                        },
+                     }
+                )
+
+                const data = await response.json()
+                if (!response.ok) {
+                    alert(data.detail || 'Unable to start meeting')
+                    return
+                }
+
+                 setMeetings((oldMeetings) =>
+                    oldMeetings.map((meeting) =>
+                         meeting.meeting_id === meetingId
+                             ? { ...meeting, is_active: true }
+                            : meeting
+)
+                 )
+                }catch (error) {
+                    console.error(error)
+                    alert('Unable to connect to Django server')
+                }
+    }
+
+
     return (
         <div className='min-h-screen bg-[#F6F6F2] flex flex-col md:flex-row'>
             <Sidebar />
@@ -127,12 +160,22 @@ const Meetings = () => {
                                         )} 
                                 </div>
 
+                                <div className='flex gap-2'>
+                                    {!meeting.is_active && (
+                                        <button
+                                         onClick={() => startMeeting(meeting.meeting_id)}
+                                         className='bg-[#477568] text-white px-4 py-2 rounded-lg'>
+                                            Start
+                                         </button>
+                                    )}
+
                                 <Link
                                     to={`/meeting/${meeting.meeting_id}`}
                                     className='bg-[#E7EFEB] text-[#263A43] px-5 py-2 rounded-lg'
                                 >
                                     Join
                                 </Link>
+                                </div>
 
                             </div>
                         ))}
