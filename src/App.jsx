@@ -8,7 +8,7 @@ import ScheduleMeeting from './components/ScheduleMeeting'
 import MeetingRoom from './pages/MeetingRoom'
 import Meetings from './pages/Meetings'
 import Contact from './pages/Contact'
-
+import Profile from './pages/Profile'
 
 const App = () => {
   return (
@@ -27,6 +27,7 @@ const App = () => {
 
         <Route path='/meetings' element={<Meetings />} />
         <Route path='/contacts' element={<Contact />} />
+        <Route path='/profile' element={<Profile />} />
 
       </Routes>
     </div>
