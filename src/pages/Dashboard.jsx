@@ -75,7 +75,7 @@ const Dashboard = () => {
             </button>
           </div>
 
-          {/* Join Meeting */}
+          
           <div className='bg-white border border-[#E5E7E3] rounded-xl p-6'>
             <h2 className='text-xl font-semibold text-[#263A43]'>
               Join Meeting
@@ -93,7 +93,7 @@ const Dashboard = () => {
             </Link>
           </div>
 
-          {/* Schedule Meeting */}
+          
           <div className='bg-white border border-[#E5E7E3] rounded-xl p-6'>
             <h2 className='text-xl font-semibold text-[#263A43]'>
               Schedule Meeting
@@ -113,7 +113,7 @@ const Dashboard = () => {
 
         </section>
 
-        {/* Upcoming Meetings */}
+        
         <section className='mt-10'>
           <h2 className='text-xl font-bold text-[#263A43] mb-5'>
             Upcoming Meetings
@@ -143,7 +143,7 @@ const Dashboard = () => {
               {meetings.map((meeting) => (
 
                 <div
-                  key={meeting.id}
+                  key={meeting.meeting_id}
                   className='bg-white border border-[#E5E7E3] rounded-xl p-5'
                 >
 
@@ -163,7 +163,7 @@ const Dashboard = () => {
                   </p>
 
                   <Link
-                    to={`/join-meeting/${meeting.meeting_id}`}
+                    to={`/meeting/${meeting.meeting_id}`}
                     className='inline-block mt-4 bg-[#E7EFEB] text-[#477568] px-4 py-2 rounded-lg'
                   >
                     Join meeting
