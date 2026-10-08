@@ -5,11 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Meeting, MeetingParticipant
 from .serializers import (
     MeetingSerializer,
-    MeetingParticipantSerializer
+    MeetingParticipantSerializer,
+    TeamSerializer
 )
 from django.utils import timezone
 
-from .models import Meeting
+from .models import Meeting,MeetingParticipant,Team
 from .serializers import MeetingSerializer
 
 
@@ -317,4 +318,28 @@ class MeetingHistoryAPIView(APIView):
             serializer.data,
             status= status.HTTP_200_OK
         )
-    
+
+class TeamListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        teams = Team.objects.filter(owner=request.user).order_by("-created_at")
+        serializer = TeamSerializer(teams, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = TeamSerializer(data=request.data)
+
+        if serializer.is_valid():
+            team = serializer.save(owner=request.user)
+
+            return Response(
+                TeamSerializer(team).data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )

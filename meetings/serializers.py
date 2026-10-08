@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Meeting, MeetingParticipant
+from .models import Meeting, MeetingParticipant,Team
 
 
 class MeetingSerializer(serializers.ModelSerializer):
@@ -49,3 +49,24 @@ class MeetingParticipantSerializer(serializers.ModelSerializer):
             "joined_at",
             "left_at",
         ]
+
+class TeamSerializer(serializers.ModelSerializer):
+    members = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Team
+        fields = [
+            "id",
+            "name",
+            "description",
+            "members",
+            "created_at",
+        ]
+        read_only_fields = [
+            "id",
+            "members",
+            "created_at",
+        ]
+
+    def get_members(self, obj):
+        return 0
