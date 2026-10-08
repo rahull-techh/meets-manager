@@ -343,3 +343,20 @@ class TeamListAPIView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class ProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        return Response({
+            "message": "You are authenticated",
+            "user": {
+                "id": user.id,
+                "name": f"{user.first_name} {user.last_name}".strip(),
+                "username": user.username,
+                "email": user.email
+            }
+        })
+    

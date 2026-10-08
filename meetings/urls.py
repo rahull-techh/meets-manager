@@ -12,6 +12,8 @@ from .views import (
     EndMeetingAPIView,
     MeetingHistoryAPIView,
     TeamListAPIView,
+    ProfileAPIView,
+
 )
 urlpatterns = [
 
@@ -27,5 +29,6 @@ urlpatterns = [
     path("end/<uuid:meeting_id>/", EndMeetingAPIView.as_view(),name="end_meeting"),
     path("history/",MeetingHistoryAPIView.as_view(),name="meeting_history"),
     path("teams/", TeamListAPIView.as_view(), name="teams"),
+    path("teams/", ProfileAPIView.as_view(), name="profile"),
 
 ]
