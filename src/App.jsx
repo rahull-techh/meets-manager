@@ -10,6 +10,7 @@ import Meetings from './pages/Meetings'
 import Contact from './pages/Contact'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
+import Teams from './pages/Teams'
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route path='/contacts' element={<Contact />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/settings' element={<Settings />} />
+        <Route path='/teams' element={<Teams />} />
 
       </Routes>
     </div>
