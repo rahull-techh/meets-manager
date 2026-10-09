@@ -62,7 +62,7 @@ const Dashboard = () => {
 
         <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8'>
 
-          {/* New Meeting */}
+          
           <div className='bg-[#477568] text-white rounded-xl p-6'>
             <h2 className='text-xl font-semibold'>New Meeting</h2>
 

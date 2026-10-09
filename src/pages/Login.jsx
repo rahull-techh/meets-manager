@@ -86,7 +86,7 @@ const handleLogin = async (e) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder='Enter your username'
-              className='w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500'
+              className='w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-[#477568]'
             />
           </div>
 
@@ -99,7 +99,7 @@ const handleLogin = async (e) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder='Enter your password'
-              className='w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500'
+              className='w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-[#477568]'
             />
           </div>
 
@@ -111,7 +111,7 @@ const handleLogin = async (e) => {
            <button
             type='submit'
             disabled={loading}
-            className='w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-blue-400'
+            className='w-full bg-[#477568] text-white py-3 rounded-lg font-medium hover:bg-[#3e6459] disabled:bg-[#518576]'
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
@@ -121,7 +121,7 @@ const handleLogin = async (e) => {
         <p className='text-center text-sm text-gray-500 mt-6'>
           Don't have an account?{' '}
           <Link to='/register'
-          className='text-indigo-600 hover:underline'>
+          className='text-[#477568] hover:underline'>
             Create account
           </Link>
         </p>
