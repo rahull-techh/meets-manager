@@ -14,7 +14,7 @@ const Teams = () => {
 
         try {
             const response = await fetch(
-                'http://127.0.0.1:8000/meetings/teams/',
+                'http://meets-manager.onrender.com/meetings/teams/',
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -56,7 +56,7 @@ setTeams(Array.isArray(data) ? data : [])
 
         try {
             const response = await fetch(
-                'http://127.0.0.1:8000/meetings/teams/',
+                'http://meets-manager.onrender.com/meetings/teams/',
                 {
                     method: 'POST',
                     headers: {

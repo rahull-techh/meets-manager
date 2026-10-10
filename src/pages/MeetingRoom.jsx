@@ -28,7 +28,7 @@ const MeetingRoom = () => {
     }
 
     const socket = new WebSocket(
-        `ws://127.0.0.1:8000/ws/meetings/${meetingId}/?token=${token}`
+        `ws://meets-manager.onrender.com/ws/meetings/${meetingId}/?token=${token}`
     )
 
     socketRef.current = socket

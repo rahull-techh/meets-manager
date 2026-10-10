@@ -36,7 +36,7 @@ const ScheduleMeeting = () => {
             ).toISOString()
 
             const response = await fetch(
-                'http://127.0.0.1:8000/meetings/create/',
+                'http://meets-manager.onrender.com/meetings/create/',
                 {
                     method: 'POST',
                     headers: {

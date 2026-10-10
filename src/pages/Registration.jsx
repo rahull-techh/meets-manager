@@ -30,7 +30,7 @@ const Registration = () => {
   formData.append('password', password)
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/register/', {
+    const response = await fetch('http://meets-manager.onrender.com/register/', {
       method: 'POST',
       body: formData
     })
@@ -64,7 +64,7 @@ const Registration = () => {
   formData.append('otp', otp)
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/verifyotp/', {
+    const response = await fetch('http://meets-manager.onrender.com/verifyotp/', {
       method: 'POST',
       body: formData
     })

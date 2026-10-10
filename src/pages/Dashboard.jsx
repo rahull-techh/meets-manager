@@ -20,7 +20,7 @@ const Dashboard = () => {
 
       try {
         const response = await fetch(
-          'http://127.0.0.1:8000/meetings/my/',
+          'http://meets-manager.onrender.com/meetings/my/',
           {
             method: 'GET',
             headers: {
@@ -58,7 +58,7 @@ const Dashboard = () => {
   }
   try {
     const response = await fetch(
-      'http://127.0.0.1:8000/meetings/create/',
+      'http://meets-manager.onrender.com/meetings/create/',
       {
         method: 'POST',
         headers: {
