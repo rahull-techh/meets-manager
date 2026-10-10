@@ -15,7 +15,7 @@ const Meetings = () => {
                 const token = localStorage.getItem('access_token')
 
                 const response = await fetch(
-                    'http://127.0.0.1:8000/meetings/my/',
+                    'https://meets-manager.onrender.com/meetings/my/',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -53,7 +53,7 @@ const Meetings = () => {
         const token = localStorage.getItem('access_token')
             try {
                 const response = await fetch(
-                     `http://127.0.0.1:8000/meetings/start/${meetingId}/`,
+                     `https://meets-manager.onrender.com/meetings/start/${meetingId}/`,
                      {
                         method: 'POST',
                         headers: {
@@ -86,7 +86,7 @@ const Meetings = () => {
 
         try {
             const response = await fetch(
-                `http://127.0.0.1:8000/meetings/end/${meetingId}/`,
+                `https://meets-manager.onrender.com/meetings/end/${meetingId}/`,
                 {
                     method: 'POST',
                     headers: {

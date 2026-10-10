@@ -16,7 +16,7 @@ const Profile = () => {
             }
              try {
                 const response = await fetch(
-                    'http://127.0.0.1:8000/profile/',
+                    'https://meets-manager.onrender.com/profile/',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
