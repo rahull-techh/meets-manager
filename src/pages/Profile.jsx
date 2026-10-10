@@ -16,7 +16,7 @@ const Profile = () => {
             }
              try {
                 const response = await fetch(
-                    'http://meets-manager.onrender.com/profile/',
+                    'https://meets-manager.onrender.com/profile/',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

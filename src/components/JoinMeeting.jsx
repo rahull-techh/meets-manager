@@ -31,7 +31,7 @@ const JoinMeeting =() => {
 
         try {
             const response = await fetch(
-                `http://meets-manager.onrender.com/meetings/join-participant/${meetingCode.trim()}/`,
+                `https://meets-manager.onrender.com/meetings/join-participant/${meetingCode.trim()}/`,
                 {
                     method: "POST",
                     headers: {

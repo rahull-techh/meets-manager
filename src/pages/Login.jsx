@@ -22,7 +22,7 @@ const handleLogin = async (e) => {
   setLoading(true);
 
   try {
-    const response = await fetch('http://meets-manager.onrender.com/login/', {
+    const response = await fetch('https://meets-manager.onrender.com/login/', {
     method: 'POST',
     headers: {
     'Content-Type': 'application/json',
