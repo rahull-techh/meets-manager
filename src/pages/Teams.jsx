@@ -27,7 +27,12 @@ const Teams = () => {
             }
 
             const data = await response.json()
-            setTeams(data)
+
+            if (!response.ok) {
+            throw new Error(data.detail || 'Failed to fetch teams')
+            }
+
+setTeams(Array.isArray(data) ? data : [])
         } catch (err) {
             console.error(err)
             setError('Unable to load teams')
