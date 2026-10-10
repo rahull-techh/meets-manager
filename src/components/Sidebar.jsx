@@ -14,7 +14,7 @@ const Sidebar = () => {
       
       <div>
         <h1 className='text-3xl font-bold text-[#263A43]'>
-          VOXE<span className='text-[#477568]'>.</span>
+          CONVEO<span className='text-[#477568]'>.</span>
         </h1>
         <p className='text-xs text-[#687780] mt-1'>
           your Voice, your Space

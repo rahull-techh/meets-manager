@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   const [meetings, setMeetings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -23,7 +24,7 @@ const Dashboard = () => {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             },
           }
         )
@@ -47,13 +48,51 @@ const Dashboard = () => {
     fetchMeetings()
   }, [])
 
+  const startMeeting = async () => {
+    const token = localStorage.getItem('access_token')
+  
+
+  if (!token) {
+    alert('Unable to start meet')
+    return
+  }
+  try {
+    const response = await fetch(
+      'http://127.0.0.1:8000/meetings/create/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: 'Instant Meeting',
+          scheduled_at: new Date().toISOString()
+        })
+      }
+    )
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      alert(data.detail || 'Unable to start meeting')
+      return
+    }
+
+     navigate(`/meeting/${data.meeting_id}`)
+  } catch (error) {
+    console.error(error)
+    alert('Unable to connect to Django server')
+  }
+}
+
   return (
     <div className='min-h-screen bg-[#F6F6F2] flex flex-col md:flex-row'>
       <Sidebar />
 
       <main className='flex-1 p-6 md:p-10'>
         <h1 className='text-3xl font-bold text-[#263A43]'>
-          Welcome to VOXE
+          Welcome to CONVEO
         </h1>
 
         <p className='mt-2 text-[#687780]'>
@@ -62,7 +101,7 @@ const Dashboard = () => {
 
         <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8'>
 
-          {/* New Meeting */}
+          
           <div className='bg-[#477568] text-white rounded-xl p-6'>
             <h2 className='text-xl font-semibold'>New Meeting</h2>
 
@@ -70,7 +109,8 @@ const Dashboard = () => {
               Start an instant meeting with your team.
             </p>
 
-            <button className='mt-5 bg-white text-[#477568] px-5 py-2 rounded-lg font-medium'>
+            <button className='mt-5 bg-white text-[#477568] px-5 py-2 rounded-lg font-medium'
+            onClick={startMeeting}>
               Start Meeting
             </button>
           </div>
