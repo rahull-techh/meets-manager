@@ -5,7 +5,7 @@ import threading
 meeting_id = "0c123aad-210d-448f-97ba-04cca4b697f3"
 access_token = "YOUR_ACCESS_TOKEN"
 
-url = f"ws://meets-manager.onrender.com/ws/meetings/{meeting_id}/?token={access_token}"
+url = f"wss://meets-manager.onrender.com/ws/meetings/{meeting_id}/?token={access_token}"
 
 ws = websocket.create_connection(url)
 
