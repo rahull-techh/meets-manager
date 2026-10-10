@@ -52,6 +52,10 @@ class MeetingParticipantSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     members = serializers.SerializerMethodField()
+    owner_username = serializers.CharField(
+        source="owner.username",
+        read_only=True
+    )
 
     class Meta:
         model = Team
@@ -60,11 +64,13 @@ class TeamSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "members",
+            "owner_username",
             "created_at",
         ]
         read_only_fields = [
             "id",
             "members",
+            "owner_username",
             "created_at",
         ]
 
