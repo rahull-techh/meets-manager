@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-*$kx34#@gujo%s=%39ke781d-0zirchcrc9k@f9&_9bam3o7yd
 DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get(
-    "meets-manager.onrender.com",
+    "ALLOWED_HOSTS",
     "localhost,127.0.0.1"
 ).split(",")
 
