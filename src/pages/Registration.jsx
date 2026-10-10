@@ -109,7 +109,7 @@ const Registration = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder='Enter your full name'
-              className='w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-indigo-500'
+              className='w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-[#477568]'
             />
           </div>
 
@@ -123,7 +123,7 @@ const Registration = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder='Choose a unique username'
-              className='w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-indigo-500'
+              className='w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-[#477568]'
             />
 
             <p className='text-xs text-slate-400 mt-1'>
@@ -142,13 +142,13 @@ const Registration = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder='Enter your email'
-                className='flex-1 border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-indigo-500'
+                className='flex-1 border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-[#477568]'
               />
 
               <button
                 type='button'
                 onClick={handleSendOtp}
-                className='px-4 py-3 bg-indigo-100 text-indigo-700 rounded-lg font-medium hover:bg-indigo-200'
+                className='px-4 py-3 bg-[#b5d4cb] text-[#477568] rounded-lg font-medium hover:bg-[#6daa99]'
               >
                 Send OTP
               </button>
@@ -166,7 +166,7 @@ const Registration = () => {
               onChange={(e) => setOtp(e.target.value)}
               placeholder='Enter 6-digit OTP'
               maxLength={6}
-              className='w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-indigo-500'
+              className='w-full border border-slate-300 rounded-lg px-4 py-3 outline-none focus:border-[#477568]'
             />
           </div>
 
@@ -181,13 +181,13 @@ const Registration = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder='Create a password'
-                className='w-full border border-slate-300 rounded-lg px-4 py-3 pr-20 outline-none focus:border-indigo-500'
+                className='w-full border border-slate-300 rounded-lg px-4 py-3 pr-20 outline-none focus:border-[#477568]'
               />
 
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-sm text-indigo-600'
+                className='absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#477568]'
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -201,14 +201,14 @@ const Registration = () => {
           )}
 
           {message && (
-            <div className='bg-indigo-50 text-indigo-700 text-sm rounded-lg p-3'>
+            <div className='bg-indigo-50 text-[#395c52] text-sm rounded-lg p-3'>
               {message}
             </div>
           )}
 
           <button
             type='submit'
-            className='w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700'
+            className='w-full bg-[#477568] text-white py-3 rounded-lg font-medium hover:bg-[#3b6156]'
           >
             Create Account
           </button>
@@ -220,7 +220,7 @@ const Registration = () => {
 
           <Link
             to='/login'
-            className='text-indigo-600 font-medium hover:underline'
+            className='text-[#477568] font-medium hover:underline'
           >
             Login
           </Link>
